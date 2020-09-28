@@ -112,15 +112,15 @@ def show_venue(venue_id):
     if not current_venue:
         return render_template('errors/404.html')
 
-    upcoming_shows_query = db.session.query(Show, Artist).join(Artist).filter(
+    all_comming_shows = db.session.query(Show).join(Artist).filter(
         Show.venue_id == venue_id).filter(Show.start_time > datetime.now()).all()
     upcoming_shows = []
 
-    past_shows_query = db.session.query(Show).join(Artist).filter(
+    all_past_shows = db.session.query(Show).join(Artist).filter(
         Show.venue_id == venue_id).filter(Show.start_time < datetime.now()).all()
     past_shows = []
 
-    for show in past_shows_query:
+    for show in all_past_shows:
         print(show.artist.name)
         past_shows.append({
             "artist_id": show.artist_id,
@@ -129,7 +129,7 @@ def show_venue(venue_id):
             "start_time": show.start_time.strftime("%Y-%m-%d %H:%M:%S")    
         })
 
-    for x in upcoming_shows_query:
+    for x in all_comming_shows:
         print("x")
         upcoming_shows.append({
             "artist_id": show.artist_id,
