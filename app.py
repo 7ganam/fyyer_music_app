@@ -2,6 +2,8 @@
 # Imports
 #----------------------------------------------------------------------------#
 
+# note this line should be in the models section .. in some cases python linters take all impor lines and add them to the beginning of the file .. if this is the case turn off your linter and take this line back to models section.
+from models import *
 import json
 import dateutil.parser
 import babel
@@ -32,7 +34,6 @@ migrate = Migrate(app, db)
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
-from models import *
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -126,7 +127,7 @@ def show_venue(venue_id):
             "artist_id": show.artist_id,
             "artist_name": show.artist.name,
             "artist_image_link": show.artist.image_link,
-            "start_time": show.start_time.strftime("%Y-%m-%d %H:%M:%S")    
+            "start_time": show.start_time.strftime("%Y-%m-%d %H:%M:%S")
         })
 
     for x in all_comming_shows:
