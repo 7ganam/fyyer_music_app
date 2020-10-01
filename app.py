@@ -3,7 +3,6 @@
 #----------------------------------------------------------------------------#
 
 # note this line should be in the models section .. in some cases python linters take all impor lines and add them to the beginning of the file .. if this is the case turn off your linter and take this line back to models section.
-from models import *
 import json
 import dateutil.parser
 import babel
@@ -34,6 +33,7 @@ migrate = Migrate(app, db)
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
+from models import *
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -66,16 +66,12 @@ def index():
 
 @app.route('/venues')
 def venues():
+    '''Takes in a number n, returns the square of n'''
 
-"""
-function: returns all venues objects
-returns: "city": venue.city,"state": venue.state, "venues": []
-"""
-
-venues = Venue.query.all()
- data = []
-  city_state_list = []
-   for venue in venues:
+    venues = Venue.query.all()
+    data = []
+    city_state_list = []
+    for venue in venues:
         city_state = (venue.city, venue.state)
         if city_state not in city_state_list:
             city_state_list.append(city_state)
@@ -103,10 +99,10 @@ venues = Venue.query.all()
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-"""
-function: searches venues for a certain searchterm
-returns: "count": output.count(), "data": output
-"""
+    '''
+    function: searches venues for a certain searchterm
+    returns: "count": output.count(), "data": output
+    '''
     search_term = request.form.get('search_term', '')
     output = Venue.query.filter(Venue.name.ilike(f'%{search_term}%'))
     response = {
@@ -118,10 +114,10 @@ returns: "count": output.count(), "data": output
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
-"""
-function: returns a venue with a certain id
-arguments : id of the wanted venue
-"""
+    '''
+    function: returns a venue with a certain id
+    arguments : id of the wanted venue
+    '''
     current_venue = Venue.query.get(venue_id)
     if not current_venue:
         return render_template('errors/404.html')
@@ -152,26 +148,26 @@ arguments : id of the wanted venue
             "start_time": show.start_time.strftime("%Y-%m-%d %H:%M:%S")
         })
 
-        data = {
-            "id": venue_id,
-            "name": current_venue.name,
-            "genres": current_venue.genres,
-            "address": current_venue.address,
-            "city": current_venue.city,
-            "state": current_venue.state,
-            "phone": current_venue.phone,
-            "website": current_venue.website,
-            "facebook_link": current_venue.facebook_link,
-            "seeking_talent": current_venue.seeking_talent,
-            "seeking_description": current_venue.seeking_description,
-            "image_link": current_venue.image_link,
-            "past_shows": past_shows,
-            "upcoming_shows": upcoming_shows,
-            "past_shows_count": len(past_shows),
-            "upcoming_shows_count": len(upcoming_shows)
-        }
+    data = {
+        "id": venue_id,
+        "name": current_venue.name,
+        "genres": current_venue.genres,
+        "address": current_venue.address,
+        "city": current_venue.city,
+        "state": current_venue.state,
+        "phone": current_venue.phone,
+        "website": current_venue.website,
+        "facebook_link": current_venue.facebook_link,
+        "seeking_talent": current_venue.seeking_talent,
+        "seeking_description": current_venue.seeking_description,
+        "image_link": current_venue.image_link,
+        "past_shows": past_shows,
+        "upcoming_shows": upcoming_shows,
+        "past_shows_count": len(past_shows),
+        "upcoming_shows_count": len(upcoming_shows)
+    }
 
-        return render_template('pages/show_venue.html', venue=data)
+    return render_template('pages/show_venue.html', venue=data)
 
 
 #  Create Venue
@@ -180,20 +176,19 @@ arguments : id of the wanted venue
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
-"""
-function: fetch create form
-returns: html of the
-"""
+    '''
+    function: fetch create form
+    returns: html of the
+    '''
     form = VenueForm()
     return render_template('forms/new_venue.html', form=form)
 
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-"""
-function: creates a new venue
-returns: adds new venue to database and renders the home page back
-"""
+    '''function: creates a new venue
+    returns: adds new venue to database and renders the home page back
+    '''
     error = False
     body = {}
 
@@ -245,11 +240,11 @@ returns: adds new venue to database and renders the home page back
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
-"""
-function: deletes a veneue by id
-arguments : id of the deleted venue
-returns: redirects back to index page
-"""
+    '''
+    function: deletes a veneue by id
+    arguments : id of the deleted venue
+    returns: redirects back to index page
+    '''
     try:
         # Get venue by ID
         venue = Venue.query.get(venue_id)
@@ -269,11 +264,11 @@ returns: redirects back to index page
 
 @app.route('/artists')
 def artists():
-"""
-function: list all artists
-arguments : none
-returns: render the artist's page with fetched data from database
-"""
+    '''
+    function: list all artists
+    arguments : none
+    returns: render the artist's page with fetched data from database
+    '''
     artists = Artist.query.all()
     data = []
     for artist in artists:
@@ -284,11 +279,11 @@ returns: render the artist's page with fetched data from database
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
-"""
-function: search artists
-arguments : none
-returns: renders list of artists met the search conditions
-"""
+    '''
+    function: search artists
+    arguments : none
+    returns: renders list of artists met the search conditions
+    '''
     search_term = request.form.get('search_term', '')
     output = Artist.query.filter(Artist.name.ilike(f'%{search_term}%'))
     response = {
@@ -299,12 +294,12 @@ returns: renders list of artists met the search conditions
 
 
 @app.route('/artists/<int:artist_id>')
-"""
-function: displays a certain artist
-arguments : id of the artist
-returns: renders the artist's page
-"""
 def show_artist(artist_id):
+    '''
+    function: displays a certain artist
+    arguments : id of the artist
+    returns: renders the artist's page
+    '''
     artist = Artist.query.get(artist_id)
     shows = Show.query.filter_by(artist_id=artist_id).all()
     old_shows_list = []
@@ -344,11 +339,11 @@ def show_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-"""
-function: edits the data of a certain artist
-arguments : id of the artist
-returns: renders the form
-"""
+    '''
+    function: edits the data of a certain artist
+    arguments : id of the artist
+    returns: renders the form
+    '''
     form = ArtistForm()
     a = Artist.query.get(artist_id)
     artist = {
@@ -366,11 +361,11 @@ returns: renders the form
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
-"""
-function: edits the data of a certain artist
-arguments : id of the artist
-returns: renders the artist ppage
-"""
+    '''
+    function: edits the data of a certain artist
+    arguments : id of the artist
+    returns: renders the artist ppage
+    '''
     error = False
     body = {}
     try:
@@ -423,11 +418,11 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
-"""
-function: edits the data of a certain venue
-arguments : id of the venue
-returns: renders the venue ppage
-"""
+    '''
+    function: edits the data of a certain venue
+    arguments : id of the venue
+    returns: renders the venue ppage
+    '''
     error = False
     try:
         form = VenueForm()
@@ -470,11 +465,11 @@ def create_artist_form():
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
-"""
-function: creates a new artist
-arguments : none
-returns: renders the home page again
-"""
+    '''
+    function: creates a new artist
+    arguments : none
+    returns: renders the home page again
+    '''
     error = False
     body = {}
     try:
@@ -511,7 +506,8 @@ returns: renders the home page again
     if error:
         abort(500)
     else:
-        flash('artist ' + request.form['name'] + ' was successfully listed!')
+        flash('artist ' + request.form['name'] +
+              ' was successfully listed!')
         return render_template('pages/home.html')
 
 #  Shows
@@ -520,11 +516,11 @@ returns: renders the home page again
 
 @app.route('/shows')
 def shows():
-"""
-function: fetch all shows
-arguments : none
-returns: renders the shows page 
-"""
+    '''
+    function: fetch all shows
+    arguments : none
+    returns: renders the shows page
+    '''
     data = []
     shows = Show.query.order_by(db.desc(Show.start_time))
     for show in shows:
@@ -551,11 +547,11 @@ def create_shows():
 
 @ app.route('/shows/create', methods=['POST'])
 def create_show_submission():
-"""
-function: creates a new show
-arguments : none
-returns: renders the home page again
-"""
+    '''
+    function: creates a new show
+    arguments : none
+    returns: renders the home page again
+    '''
     error = False
     body = {}
     try:
