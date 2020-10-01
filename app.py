@@ -67,10 +67,15 @@ def index():
 @app.route('/venues')
 def venues():
 
-    venues = Venue.query.all()
-    data = []
-    city_state_list = []
-    for venue in venues:
+"""
+function: returns all venues objects
+returns: "city": venue.city,"state": venue.state, "venues": []
+"""
+
+venues = Venue.query.all()
+ data = []
+  city_state_list = []
+   for venue in venues:
         city_state = (venue.city, venue.state)
         if city_state not in city_state_list:
             city_state_list.append(city_state)
@@ -98,6 +103,10 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
+"""
+function: searches venues for a certain searchterm
+returns: "count": output.count(), "data": output
+"""
     search_term = request.form.get('search_term', '')
     output = Venue.query.filter(Venue.name.ilike(f'%{search_term}%'))
     response = {
@@ -109,6 +118,10 @@ def search_venues():
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
+"""
+function: returns a venue with a certain id
+arguments : id of the wanted venue
+"""
     current_venue = Venue.query.get(venue_id)
     if not current_venue:
         return render_template('errors/404.html')
@@ -167,13 +180,20 @@ def show_venue(venue_id):
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
+"""
+function: fetch create form
+returns: html of the
+"""
     form = VenueForm()
     return render_template('forms/new_venue.html', form=form)
 
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
-
+"""
+function: creates a new venue
+returns: adds new venue to database and renders the home page back
+"""
     error = False
     body = {}
 
@@ -225,6 +245,11 @@ def create_venue_submission():
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
+"""
+function: deletes a veneue by id
+arguments : id of the deleted venue
+returns: redirects back to index page
+"""
     try:
         # Get venue by ID
         venue = Venue.query.get(venue_id)
@@ -244,6 +269,11 @@ def delete_venue(venue_id):
 
 @app.route('/artists')
 def artists():
+"""
+function: list all artists
+arguments : none
+returns: render the artist's page with fetched data from database
+"""
     artists = Artist.query.all()
     data = []
     for artist in artists:
@@ -254,6 +284,11 @@ def artists():
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
+"""
+function: search artists
+arguments : none
+returns: renders list of artists met the search conditions
+"""
     search_term = request.form.get('search_term', '')
     output = Artist.query.filter(Artist.name.ilike(f'%{search_term}%'))
     response = {
@@ -264,6 +299,11 @@ def search_artists():
 
 
 @app.route('/artists/<int:artist_id>')
+"""
+function: displays a certain artist
+arguments : id of the artist
+returns: renders the artist's page
+"""
 def show_artist(artist_id):
     artist = Artist.query.get(artist_id)
     shows = Show.query.filter_by(artist_id=artist_id).all()
@@ -304,6 +344,11 @@ def show_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
+"""
+function: edits the data of a certain artist
+arguments : id of the artist
+returns: renders the form
+"""
     form = ArtistForm()
     a = Artist.query.get(artist_id)
     artist = {
@@ -321,6 +366,11 @@ def edit_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
+"""
+function: edits the data of a certain artist
+arguments : id of the artist
+returns: renders the artist ppage
+"""
     error = False
     body = {}
     try:
@@ -373,6 +423,11 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
+"""
+function: edits the data of a certain venue
+arguments : id of the venue
+returns: renders the venue ppage
+"""
     error = False
     try:
         form = VenueForm()
@@ -408,12 +463,18 @@ def edit_venue_submission(venue_id):
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
+
     form = ArtistForm()
     return render_template('forms/new_artist.html', form=form)
 
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
+"""
+function: creates a new artist
+arguments : none
+returns: renders the home page again
+"""
     error = False
     body = {}
     try:
@@ -459,6 +520,11 @@ def create_artist_submission():
 
 @app.route('/shows')
 def shows():
+"""
+function: fetch all shows
+arguments : none
+returns: renders the shows page 
+"""
     data = []
     shows = Show.query.order_by(db.desc(Show.start_time))
     for show in shows:
@@ -478,12 +544,18 @@ def shows():
 
 @ app.route('/shows/create')
 def create_shows():
+
     form = ShowForm()
     return render_template('forms/new_show.html', form=form)
 
 
 @ app.route('/shows/create', methods=['POST'])
 def create_show_submission():
+"""
+function: creates a new show
+arguments : none
+returns: renders the home page again
+"""
     error = False
     body = {}
     try:
